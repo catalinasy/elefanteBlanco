@@ -80,8 +80,20 @@ export default function Home() {
       return; // No more cards to draw
     }
 
-    const randomIndex = Math.floor(Math.random() * availableCards.length);
-    const selectedCard = availableCards[randomIndex];
+    // Check if only the final card remains (it has the highest ID)
+    const finalCardId = numberOfPresents;
+    const finalCard = availableCards.find(card => card.id === finalCardId);
+    const otherCards = availableCards.filter(card => card.id !== finalCardId);
+    
+    let selectedCard;
+    if (otherCards.length > 0) {
+      // If there are non-final cards available, pick randomly from them
+      const randomIndex = Math.floor(Math.random() * otherCards.length);
+      selectedCard = otherCards[randomIndex];
+    } else {
+      // Only the final card is left, so draw it
+      selectedCard = finalCard!;
+    }
     
     const newDrawnCards = [...drawnCards, selectedCard];
     setDrawnCards(newDrawnCards);
@@ -113,9 +125,11 @@ export default function Home() {
     const cards = generateGameCards(numberOfPresents);
     setGameCards(cards);
     setGameStarted(true);
-    // Draw first card
-    const randomIndex = Math.floor(Math.random() * cards.length);
-    const firstCard = cards[randomIndex];
+    // Draw first card (exclude the final card which has the highest ID)
+    const finalCardId = numberOfPresents;
+    const nonFinalCards = cards.filter(card => card.id !== finalCardId);
+    const randomIndex = Math.floor(Math.random() * nonFinalCards.length);
+    const firstCard = nonFinalCards[randomIndex];
     setDrawnCards([firstCard]);
     setCurrentCardIndex(0);
   };
@@ -153,8 +167,18 @@ export default function Home() {
                   min="4"
                   max="30"
                   value={numberOfPresents}
-                  onChange={(e) => setNumberOfPresents(Math.max(4, Math.min(30, parseInt(e.target.value) || 4)))}
-                  className="w-24 px-3 py-2 text-lg text-center border-2 rounded-lg"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '') {
+                      setNumberOfPresents(4);
+                    } else {
+                      const num = parseInt(value, 10);
+                      if (!isNaN(num)) {
+                        setNumberOfPresents(Math.max(4, Math.min(30, num)));
+                      }
+                    }
+                  }}
+                  className="w-24 px-3 py-2 text-lg text-center border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
                   style={{borderColor: '#EEA727', backgroundColor: '#FFEF5F', color: '#4D2B8C'}}
                 />
               </div>

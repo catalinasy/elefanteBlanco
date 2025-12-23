@@ -8,7 +8,7 @@ export default function Home() {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [drawnCards, setDrawnCards] = useState<GameCardType[]>([]);
   const [gameStarted, setGameStarted] = useState(false);
-  const [numberOfPresents, setNumberOfPresents] = useState<number>(14);
+  const [numberOfPresents, setNumberOfPresents] = useState<number | undefined>(undefined);
   const [gameCards, setGameCards] = useState<GameCardType[]>([]);
 
   const generateGameCards = (numPresents: number): GameCardType[] => {
@@ -122,6 +122,7 @@ export default function Home() {
   };
 
   const startGame = () => {
+    if (!numberOfPresents) return;
     const cards = generateGameCards(numberOfPresents);
     setGameCards(cards);
     setGameStarted(true);
@@ -153,43 +154,51 @@ export default function Home() {
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center max-w-md">
               <h1 className="text-4xl font-bold mb-4" style={{color: '#4D2B8C'}}>
-                🎁 Elefante Blanco 🎁
+                Elefante Blanco
               </h1>
               <p className="text-lg mb-8" style={{color: '#4D2B8C'}}>
                 ¡Bienvenido al juego navideño de intercambio de regalos! Cada carta tiene una instrucción especial que hará que el juego sea divertido e impredecible.
               </p>
               <div className="mb-6 flex flex-col items-center space-y-3">
                 <label className="text-lg font-bold" style={{color: '#4D2B8C'}}>
-                  Número de regalos:
+                  Número de jugadores:
                 </label>
                 <input
                   type="number"
-                  min="4"
-                  max="30"
-                  value={numberOfPresents}
+                  value={numberOfPresents ?? ''}
                   onChange={(e) => {
                     const value = e.target.value;
                     if (value === '') {
-                      setNumberOfPresents(4);
+                      setNumberOfPresents(undefined);
                     } else {
                       const num = parseInt(value, 10);
                       if (!isNaN(num)) {
-                        setNumberOfPresents(Math.max(4, Math.min(30, num)));
+                        setNumberOfPresents(num);
                       }
                     }
                   }}
+                  placeholder="4-30"
                   className="w-24 px-3 py-2 text-lg text-center border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
                   style={{borderColor: '#EEA727', backgroundColor: '#FFEF5F', color: '#4D2B8C'}}
                 />
               </div>
               <button
                 onClick={startGame}
-                className="text-white font-bold py-4 px-8 rounded-lg text-xl transition-colors"
-                style={{backgroundColor: '#4D2B8C'}}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#85409D'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4D2B8C'}
+                disabled={!numberOfPresents || numberOfPresents < 4 || numberOfPresents > 30}
+                className="text-white font-bold py-4 px-8 rounded-lg text-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{backgroundColor: numberOfPresents && numberOfPresents >= 4 && numberOfPresents <= 30 ? '#4D2B8C' : '#999'}}
+                onMouseEnter={(e) => {
+                  if (numberOfPresents && numberOfPresents >= 4 && numberOfPresents <= 30) {
+                    e.currentTarget.style.backgroundColor = '#85409D';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (numberOfPresents && numberOfPresents >= 4 && numberOfPresents <= 30) {
+                    e.currentTarget.style.backgroundColor = '#4D2B8C';
+                  }
+                }}
               >
-                Iniciar
+                Empezar
               </button>
             </div>
           </div>

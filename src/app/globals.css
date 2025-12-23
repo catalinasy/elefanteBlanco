@@ -24,3 +24,41 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+.card-flip {
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease-in-out;
+}
+
+.card-flip:hover {
+  transform: scale(1.05);
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0.3) rotate(0deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05) rotate(5deg);
+  }
+  70% {
+    transform: scale(0.9) rotate(-2deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.card-reveal {
+  animation: bounce-in 0.8s ease-out forwards;
+}

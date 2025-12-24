@@ -29,7 +29,7 @@ export default function Home() {
       { type: 'steal', instruction: 'Roba el regalo del jugador con más botones en la ropa' },
       { type: 'steal', instruction: 'Roba el regalo del jugador más joven' },
       { type: 'steal', instruction: 'Roba el regalo del jugador de mayor edad' },
-      { type: 'swap', instruction: 'Intercambia regalos con quien esté vestido de rojo' },
+      { type: 'swap', instruction: 'Intercambia regalos con quien esté vestido de rojo (si no hay nadie de rojo, intercambia con el jugador de tu derecha)' },
       { type: 'special', instruction: 'Todos intercambian regalos con la persona de enfrente' },
       { type: 'steal', instruction: 'Roba el regalo de quien tenga más joyas puestas' },
       { type: 'steal', instruction: 'Roba el regalo de quien tenga el cabello más largo' }
@@ -87,7 +87,7 @@ export default function Home() {
     
     const newDrawnCards = [...drawnCards, selectedCard];
     setDrawnCards(newDrawnCards);
-    setCurrentCardIndex(newDrawnCards.length - 1);
+    setCurrentCardIndex(currentCardIndex + 1);
   };
 
   const goToPrevious = () => {
@@ -202,7 +202,10 @@ export default function Home() {
               />
             </div>
 
-            <div className="h-[20%] flex items-center justify-center">
+            <div className="h-[20%] flex items-center justify-center flex-col space-y-2">
+              <div className="text-center text-sm" style={{color: '#4D2B8C'}}>
+                Carta {currentCardIndex + 1} de {numberOfPresents} | {drawnCards.length} reveladas | {gameCards.length - drawnCards.length} restantes
+              </div>
               <button
                 onClick={resetGame}
                 className="text-white font-bold py-3 px-6 rounded-lg text-lg transition-colors"

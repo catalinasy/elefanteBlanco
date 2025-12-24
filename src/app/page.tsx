@@ -45,23 +45,13 @@ export default function Home() {
     // Generate cards for numPresents - 1 (save last spot for final card)
     const cardsNeeded = numPresents - 1;
     
-    for (let i = 0; i < cardsNeeded && i < baseCards.length; i++) {
+    // Generate all cards needed, repeating base cards if necessary
+    for (let i = 0; i < cardsNeeded; i++) {
+      const baseCard = baseCards[i % baseCards.length];
       cards.push({
         id: i + 1,
-        ...baseCards[i]
+        ...baseCard
       });
-    }
-
-    // If we need more cards than base cards, repeat some
-    if (cardsNeeded > baseCards.length) {
-      const remaining = cardsNeeded - baseCards.length;
-      for (let i = 0; i < remaining; i++) {
-        const baseCard = baseCards[i % baseCards.length];
-        cards.push({
-          id: baseCards.length + i + 1,
-          ...baseCard
-        });
-      }
     }
 
     // Always add the final card as the last card
